@@ -44,6 +44,39 @@ require_once 'celestial_template.php';
             background: linear-gradient(135deg, var(--deep-space-blue), var(--nebula-purple));
             color: var(--starlight-white);
             overflow-x: hidden;
+            position: relative;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .cosmic-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 30% 50%, rgba(0,255,212,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(255,0,255,0.1) 0%, transparent 50%),
+                linear-gradient(135deg, var(--deep-space-blue), var(--nebula-purple));
+            background-attachment: fixed;
+            opacity: 0.8;
+            z-index: -1;
         }
 
         .nav-container {
@@ -269,9 +302,11 @@ require_once 'celestial_template.php';
     </style>
 </head>
 <body>
+    <div class="overlay"></div>
+    <div class="cosmic-background"></div>
     <nav class="nav-container">
         <div class="nav-content">
-            <a href="categories.php" class="nav-back">← Back to Categories</a>
+            <a href="#" onclick="history.back(); return false;" class="nav-back">← Back to Categories</a>
         </div>
     </nav>
 

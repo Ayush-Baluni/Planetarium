@@ -1,16 +1,11 @@
-<?php
-require_once 'counter.php';
-$counter = new VisitorCounter('about');
-$total_visits = $counter->getTotalVisits();
-$today_visits = $counter->getTodayVisits();
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cosmic Horizons Planetarium</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@300;400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono:wght@400;700&display=swap');
 
         :root {
             --deep-space-blue: #0B1746;
@@ -24,16 +19,43 @@ $today_visits = $counter->getTodayVisits();
             padding: 0;
             background: linear-gradient(135deg, var(--deep-space-blue), var(--nebula-purple));
             color: var(--starlight-white);
-            font-family: 'Roboto Mono', monospace;
+            font-family: 'Share Tech Mono', monospace;
             line-height: 1.6;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .cosmic-container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 2rem;
             perspective: 1000px;
+        }
+
+        .section {
+            background: rgba(20, 30, 80, 0.5);
+            border-left: 4px solid var(--hologram-cyan);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .section:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(0, 255, 212, 0.3);
+        }
+
+        .visitor-data {
+            background: rgba(10, 20, 70, 0.6);
+            border: 2px solid var(--hologram-cyan);
+            padding: 1.5rem;
+            text-align: center;
+            margin: 0 auto 2rem auto;
+            backdrop-filter: blur(10px);
+            word-wrap: break-word;
+            max-width: 400px;
         }
 
         .holographic-header {
@@ -42,41 +64,37 @@ $today_visits = $counter->getTodayVisits();
             color: var(--hologram-cyan);
             text-shadow: 0 0 10px rgba(0, 255, 212, 0.7);
             font-size: 2.5em;
-            margin-bottom: 30px;
+            margin-bottom: 2rem;
+            margin-top: 10px;
             transform: translateZ(50px);
-        }
-
-        .visitor-data {
-            background: rgba(10, 20, 70, 0.6);
-            border: 2px solid var(--hologram-cyan);
-            padding: 15px;
-            text-align: center;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        .section {
-            background: rgba(20, 30, 80, 0.5);
-            border-left: 4px solid var(--hologram-cyan);
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .section:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 20px rgba(0, 255, 212, 0.3);
+            word-wrap: break-word;
         }
 
         .section h2 {
             font-family: 'Orbitron', sans-serif;
             color: var(--hologram-cyan);
-            margin-bottom: 15px;
+            margin-bottom: 1rem;
+            font-size: 1.8em;
         }
 
         .terminal-text {
-            font-family: 'Roboto Mono', monospace;
+            font-family: 'Share Tech Mono', monospace;
             color: var(--hologram-cyan);
+            margin: 0.5rem 0;
+            word-break: break-word;
+        }
+
+        .terminal-text.white-text {
+            color: var(--starlight-white);
+        }
+
+        .terminal-text a {
+            color: var(--hologram-cyan);
+            text-decoration: none;
+        }
+
+        .terminal-text a:hover {
+            text-decoration: underline;
         }
 
         .overlay {
@@ -96,16 +114,140 @@ $today_visits = $counter->getTodayVisits();
             z-index: 10;
         }
 
-        .terminal-text a {
-            color: var(--hologram-cyan); /* Match the existing text color */
-            text-decoration: none; /* Remove underline */
+        .capabilities-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 1rem 0;
         }
 
-        .terminal-text a:hover {
-            text-decoration: underline; /* Optional: Add subtle hover effect */
+        .capabilities-list li {
+            color: var(--hologram-cyan);
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
         }
 
+        .capabilities-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--hologram-cyan);
+        }
 
+        .contact-info {
+            display: grid;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .contact-label {
+            color: var(--starlight-white);
+            margin-right: 0.5rem;
+        }
+
+        .contact-value {
+            color: var(--hologram-cyan);
+            word-break: break-all;
+        }
+
+        @media screen and (max-width: 768px) {
+            .cosmic-container {
+                padding: 1.5rem;
+            }
+
+            .visitor-data {
+                max-width: 350px;
+                padding: 1.2rem;
+                margin: 0 auto 1.5rem auto;
+            }
+
+            .holographic-header {
+                font-size: 2em;
+                margin-bottom: 1.5rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .section h2 {
+                font-size: 1.5em;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .cosmic-container {
+                padding: 1rem;
+            }
+
+            .visitor-data {
+                max-width: 300px;
+                padding: 1rem;
+                margin: 0 auto 1rem auto;
+            }
+
+            .holographic-header {
+                font-size: 1.5em;
+                margin-bottom: 1rem;
+            }
+
+            .section {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .section h2 {
+                font-size: 1.2em;
+            }
+
+            .terminal-text {
+                font-size: 0.9em;
+            }
+
+            .capabilities-list li {
+                padding-left: 1rem;
+            }
+
+            .contact-info {
+                gap: 0.3rem;
+            }
+        }
+
+        @media screen and (max-width: 360px) {
+            .cosmic-container {
+                padding: 0.8rem;
+            }
+
+            .visitor-data {
+                max-width: 280px;
+                padding: 0.8rem;
+            }
+
+            .holographic-header {
+                font-size: 1.3em;
+            }
+
+            .section {
+                padding: 0.8rem;
+            }
+
+            .terminal-text {
+                font-size: 0.8em;
+            }
+        }
+
+        @media screen and (max-width: 500px) {
+            .holographic-header {
+                margin-top: 25px;
+            }
+        }
+
+        @media screen and (max-width: 365px) {
+            .holographic-header {
+                margin-top: 40px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -113,22 +255,22 @@ $today_visits = $counter->getTodayVisits();
     <div class="cosmic-container">
         <div class="visitor-data">
             <h3 class="terminal-text">COSMIC CONNECTION METRICS</h3>
-            <p>TOTAL CELESTIAL VIEWS: <?php echo $total_visits; ?></p>
-            <p>CELESTIAL VIEWS TODAY: <?php echo $today_visits; ?></p>
+            <p>TOTAL CELESTIAL VIEWS: 100</p>
+            <p>CELESTIAL VIEWS TODAY: 11</p>
         </div>
 
         <h1 class="holographic-header">COSMIC HORIZONS PLANETARIUM</h1>
 
         <div class="section">
             <h2>MISSION</h2>
-            <p>Greetings. Our directive: Bridge the infinite divide between terrestrial consciousness and the vast, unexplored realms of universal understanding.</p>
+            <p class="terminal-text white-text">Greetings. Our directive: Bridge the infinite divide between terrestrial consciousness and the vast, unexplored realms of universal understanding.</p>
         </div>
 
         <div class="section">
             <h2>PLANETARIUM CAPABILITIES</h2>
-            <p>Advanced sensory simulation chambers include:</p>
-            <ul class="terminal-text">
-                <li>Informative learning through sci fi visuals</li>
+            <p class="terminal-text white-text">Advanced sensory simulation chambers include:</p>
+            <ul class="capabilities-list">
+                <li>Informative learning through sci-fi visuals</li>
                 <li>Easy Navigation Interfaces</li>
                 <li>Categorically stored celestial bodies</li>
             </ul>
@@ -136,11 +278,20 @@ $today_visits = $counter->getTodayVisits();
 
         <div class="section">
             <h2>COMMUNICATION PROTOCOLS</h2>
-            <p>
-                EMAIL CHANNEL: <span  class="terminal-text"><a href = "mailto:scbaluni63094@gmail.com">scbaluni63094@gmail.com</a></span><br>
-                CALL BEACON: <span  class="terminal-text"><a href="tel:+918534077643">+91 8534077643</a></span><br>
-                COORDINATES: <span  class="terminal-text">(30.27270741823115, 78.00069808959962), Dehradun, Uttarakhand, India, Earth</span>
-            </p>
+            <div class="contact-info">
+                <div>
+                    <span class="contact-label">EMAIL CHANNEL:</span>
+                    <span class="contact-value">scbaluni63094@gmail.com</span>
+                </div>
+                <div>
+                    <span class="contact-label">CALL BEACON:</span>
+                    <span class="contact-value">+91 8534877643</span>
+                </div>
+                <div>
+                    <span class="contact-label">COORDINATES:</span>
+                    <span class="contact-value">(30.27270741823115, 78.00069808959962), Dehradun, Uttarakhand, India, Earth</span>
+                </div>
+            </div>
         </div>
     </div>
 </body>

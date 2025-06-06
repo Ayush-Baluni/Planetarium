@@ -18,7 +18,7 @@ $today_visits = $counter->getTodayVisits();
   <header>
     <nav>
       <ul>
-        <li><a href="#">Events</a></li>
+        <li><a href="events.php">Events</a></li>
         <li><a href="categories.php">Categories</a></li>
         <li class="title-container">
             <span class="title">Planetarium</span>

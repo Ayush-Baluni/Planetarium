@@ -24,10 +24,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-blue: #00f3ff;
-            --deep-space: #090b15;
-            --hologram: rgba(0, 243, 255, 0.1);
-            --grid-color: rgba(0, 243, 255, 0.2);
+            --deep-space-blue: #0B1746;
+            --nebula-purple: #4A2C5D;
+            --hologram-cyan: #00FFD4;
+            --starlight-white: #E6E6FA;
+            --glow-pink: #FF00FF;
+            --cosmic-black: #000000;
         }
 
         * {
@@ -36,114 +38,106 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             box-sizing: border-box;
         }
 
-        body {
-            background: var(--deep-space);
+        body, html {
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             font-family: 'Share Tech Mono', monospace;
-            color: #fff;
+            background: linear-gradient(135deg, var(--deep-space-blue), var(--nebula-purple));
+            color: var(--starlight-white);
+            overflow-x: hidden;
             position: relative;
-            overflow: hidden;
         }
 
-        /* Grid Background Animation */
-        .grid {
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background-image: 
-                linear-gradient(var(--grid-color) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-            background-size: 50px 50px;
-            transform: perspective(300px) rotateX(45deg);
-            animation: grid-move 20s linear infinite;
-            z-index: 1;
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 10;
         }
 
-        @keyframes grid-move {
-            0% {
-                transform: perspective(300px) rotateX(45deg) translateY(0);
-            }
-            100% {
-                transform: perspective(300px) rotateX(45deg) translateY(-50px);
-            }
+        .cosmic-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 30% 50%, rgba(0,255,212,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(255,0,255,0.1) 0%, transparent 50%),
+                linear-gradient(135deg, var(--deep-space-blue), var(--nebula-purple));
+            background-attachment: fixed;
+            opacity: 0.8;
+            z-index: -1;
         }
 
         .login-container {
-            background: rgba(9, 11, 21, 0.9);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(11, 23, 70, 0.6);
             padding: 3rem;
             border-radius: 10px;
             width: 90%;
             max-width: 500px;
-            position: relative;
-            z-index: 2;
             backdrop-filter: blur(10px);
-            border: 1px solid var(--neon-blue);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2),
-                        inset 0 0 20px rgba(0, 243, 255, 0.1);
-            animation: container-glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes container-glow {
-            from {
-                box-shadow: 0 0 20px rgba(0, 243, 255, 0.2),
-                            inset 0 0 20px rgba(0, 243, 255, 0.1);
-            }
-            to {
-                box-shadow: 0 0 25px rgba(0, 243, 255, 0.3),
-                            inset 0 0 25px rgba(0, 243, 255, 0.2);
-            }
+            border: 1px solid var(--hologram-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 212, 0.2);
+            z-index: 100;
         }
 
         h2 {
             font-family: 'Orbitron', sans-serif;
-            color: var(--neon-blue);
+            color: var(--hologram-cyan);
             text-align: center;
             margin-bottom: 2rem;
             letter-spacing: 2px;
-            position: relative;
-        }
-
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            text-transform: uppercase;
+            font-size: 2em;
+            text-shadow: 0 0 10px rgba(0, 255, 212, 0.5);
         }
 
         .form-group {
             margin-bottom: 1.5rem;
-            position: relative;
         }
 
         label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--neon-blue);
+            color: var(--hologram-cyan);
+            font-family: 'Orbitron', sans-serif;
             font-size: 0.9rem;
             letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         input {
             width: 100%;
             padding: 0.8rem;
-            background: rgba(0, 243, 255, 0.05);
-            border: 1px solid var(--neon-blue);
-            color: #fff;
+            background: rgba(0, 255, 212, 0.05);
+            border: 1px solid var(--hologram-cyan);
+            border-radius: 4px;
+            color: var(--hologram-cyan);
             font-family: 'Share Tech Mono', monospace;
             letter-spacing: 1px;
             transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 212, 0.1);
         }
 
         input:focus {
             outline: none;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
-            background: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 255, 212, 0.3);
+            background: rgba(0, 255, 212, 0.1);
+            border-color: var(--hologram-cyan);
         }
 
         .button-group {
@@ -159,36 +153,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 4px;
+        }
+
+        button[type="button"] {
             background: transparent;
-            border: 1px solid var(--neon-blue);
-            color: var(--neon-blue);
-            position: relative;
-            overflow: hidden;
-        }
-
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                120deg,
-                transparent,
-                rgba(0, 243, 255, 0.2),
-                transparent
-            );
-            transition: 0.5s;
-        }
-
-        button:hover::before {
-            left: 100%;
+            border: 1px solid var(--hologram-cyan);
+            color: var(--hologram-cyan);
         }
 
         button[type="submit"] {
-            background: var(--neon-blue);
-            color: var(--deep-space);
+            background: var(--hologram-cyan);
+            border: 1px solid var(--hologram-cyan);
+            color: var(--deep-space-blue);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(0, 255, 212, 0.3);
         }
 
         .error {
@@ -205,12 +189,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             25% { transform: translateX(-10px); }
             75% { transform: translateX(10px); }
         }
+
+        @media screen and (max-width: 768px) {
+            .login-container {
+                width: 85%;
+                padding: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .login-container {
+                width: 80%;
+                padding: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.2em;
+            }
+
+            input {
+                padding: 0.6rem;
+            }
+
+            .form-group {
+                margin-bottom: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="grid"></div>
+    <div class="overlay"></div>
+    <div class="cosmic-background"></div>
     <div class="login-container">
-        <h2>MISSION CONTROL ACCESS</h2>
+        <h2>Mission Control Access</h2>
         
         <?php if (isset($error)): ?>
             <div class="error"><?php echo $error; ?></div>
@@ -218,18 +242,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <form method="POST" action="">
             <div class="form-group">
-                <label for="email">ADMINISTRATOR ID</label>
+                <label for="email">Administrator ID</label>
                 <input type="email" id="email" name="email" required autocomplete="off">
             </div>
 
             <div class="form-group">
-                <label for="password">ACCESS CODE</label>
+                <label for="password">Access Code</label>
                 <input type="password" id="password" name="password" required>
             </div>
 
             <div class="button-group">
-                <a href="index.php"><button type="button">ABORT</button></a>
-                <button type="submit">AUTHENTICATE</button>
+                <button type="button" onclick="history.back()">Abort</button>
+                <button type="submit">Authenticate</button>
             </div>
         </form>
     </div>

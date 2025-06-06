@@ -37,6 +37,24 @@ $counter->trackVisitor();
         color: var(--starlight-white);
         overflow-x: hidden;
         line-height: 1.6;
+        position: relative;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.15),
+            rgba(0, 0, 0, 0.15) 1px,
+            transparent 1px,
+            transparent 2px
+        );
+        pointer-events: none;
+        z-index: 10;
     }
 
     .cosmic-background {
@@ -51,7 +69,7 @@ $counter->trackVisitor();
             linear-gradient(135deg, var(--deep-space-blue), var(--nebula-purple));
         background-attachment: fixed;
         opacity: 0.8;
-        z-index: -2;
+        z-index: -1;
     }
 
     .cosmic-container {
@@ -190,28 +208,130 @@ $counter->trackVisitor();
         to { transform: scale(1.02); }
     }
 
-    @media screen and (max-width: 1024px) {
-        .category-grid {
-            grid-template-columns: repeat(2, 1fr);
+    @media screen and (max-width: 1200px) {
+        .cosmic-container {
+            max-width: 1000px;
+            padding: 1.5rem;
         }
 
         .holographic-header {
             font-size: 3rem;
         }
+
+        .category-grid {
+            gap: 1.5rem;
+        }
+    }
+
+    @media screen and (max-width: 992px) {
+        .cosmic-container {
+            max-width: 90%;
+        }
+
+        .category-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+        }
+
+        .holographic-header {
+            font-size: 2.75rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .category-box {
+            padding: 1.75rem;
+        }
     }
 
     @media screen and (max-width: 768px) {
-        .category-grid {
-            grid-template-columns: 1fr;
+        .cosmic-container {
+            max-width: 95%;
+            padding: 1.25rem;
         }
 
         .holographic-header {
             font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .category-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .category-box {
+            padding: 1.5rem;
+        }
+
+        .category-title {
+            font-size: 2rem;
+        }
+
+        .category-description {
+            font-size: 0.95rem;
+        }
+
+        .category-button {
+            padding: 0.875rem 1.75rem;
+            font-size: 1.1rem;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        .cosmic-container {
+            padding: 1rem;
+        }
+
+        .holographic-header {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-box {
+            padding: 1.25rem;
+        }
+
+        .category-title {
+            font-size: 1.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .category-description {
+            font-size: 0.9rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .category-button {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+    @media screen and (max-width: 360px) {
+        .holographic-header {
+            font-size: 1.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .category-box {
+            padding: 1rem;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-button {
+            padding: 0.625rem 1.25rem;
         }
     }
   </style>
 </head>
 <body>
+    <div class="overlay"></div>
     <div class="cosmic-background"></div>
 
     <div class="cosmic-container">
