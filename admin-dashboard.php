@@ -59,7 +59,7 @@ if (isset($_POST['logout'])) {
                 transparent 2px
             );
             pointer-events: none;
-            z-index: 10;
+            z-index: 1000;
         }
 
         .cosmic-background {

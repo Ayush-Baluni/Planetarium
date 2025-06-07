@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 transparent 2px
             );
             pointer-events: none;
-            z-index: 10;
+            z-index: 1000;
         }
 
         .cosmic-background {

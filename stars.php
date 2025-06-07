@@ -209,16 +209,7 @@ require_once 'celestial_template.php';
             font-size: 0.9rem;
         }
 
-        .description {
-            font-size: 0.9rem;
-            line-height: 1.4;
-            background: rgba(0,0,0,0.2);
-            padding: 0.75rem;
-            border-radius: 6px;
-            margin-top: 0.5rem;
-            max-height: 80px;
-            overflow-y: auto;
-        }
+
 
         .celestial-block:hover {
             transform: translateY(-3px);
@@ -232,19 +223,7 @@ require_once 'celestial_template.php';
             to { opacity: 1; }
         }
 
-        /* Scrollbar Styling */
-        .description::-webkit-scrollbar {
-            width: 6px;
-        }
 
-        .description::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.1);
-        }
-
-        .description::-webkit-scrollbar-thumb {
-            background: var(--star-gold);
-            border-radius: 3px;
-        }
 
         @media screen and (max-width: 992px) {
             .celestial-container {
@@ -293,9 +272,7 @@ require_once 'celestial_template.php';
                 font-size: 1.2rem;
             }
 
-            .description {
-                max-height: 100px;
-            }
+
         }
     </style>
 </head>
@@ -316,13 +293,17 @@ require_once 'celestial_template.php';
         
         if ($bodies->num_rows > 0) {
             while($row = $bodies->fetch_assoc()) {
+                // Generate the individual page filename
+                $safe_name = preg_replace('/[^a-zA-Z0-9\-_]/', '', str_replace(' ', '-', $row['name']));
+                $page_filename = $safe_name . "-" . $row['id'] . ".php";
+                
                 echo '<div class="celestial-block">
                         <div class="celestial-image">
                             <img src="'.$row['image_path'].'" alt="'.$row['name'].'" loading="lazy">
                         </div>
                         <div class="celestial-info">
                             <div class="info-header">
-                                <h2>'.$row['name'].'</h2>
+                                <h2><a href="'.$page_filename.'" style="color: var(--star-gold); text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.textShadow=\'0 0 10px rgba(255,215,0,0.8)\'" onmouseout="this.style.textShadow=\'0 0 5px rgba(255,215,0,0.3)\'">'.$row['name'].'</a></h2>
                                 <div class="info-grid">
                                     <div class="info-item">
                                         <span class="info-label">Temperature</span>
@@ -336,11 +317,10 @@ require_once 'celestial_template.php';
                                         <span class="info-label">Distance</span>
                                         <span class="info-value">'.$row['distance'].'</span>
                                     </div>
-                                </div>
-                            </div>
-                            <p class="description">'.$row['description'].'</p>
+                                                            </div>
                         </div>
-                    </div>';
+                    </div>
+                </div>';
             }
         } else {
             echo '<div style="text-align: center; padding: 2rem; color: var(--star-gold);">
