@@ -1,5 +1,5 @@
 <?php
-require_once 'counter.php';
+require_once '../../counter.php';
 $counter = new VisitorCounter('stars');
 $counter->trackVisitor();
 
@@ -9,7 +9,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-require_once 'celestial_template.php';
+require_once '../../celestial_template.php';
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +27,7 @@ require_once 'celestial_template.php';
             --starlight-white: #E6E6FA;
             --glow-pink: #FF00FF;
             --cosmic-black: #000000;
-            --star-gold:rgb(0, 229, 255);
+            --star-gold: #FFD700;
         }
 
         * {
@@ -94,17 +94,21 @@ require_once 'celestial_template.php';
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .nav-back {
             color: var(--star-gold);
+            background: transparent;
             text-decoration: none;
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
             transition: all 0.3s ease;
             padding: 0.5rem 1rem;
             border: 1px solid var(--star-gold);
             border-radius: 4px;
+            white-space: nowrap;
+            cursor: pointer;
         }
 
         .nav-back:hover {
@@ -116,10 +120,11 @@ require_once 'celestial_template.php';
             text-align: center;
             color: var(--star-gold);
             font-family: 'Orbitron', sans-serif;
-            padding: 3rem 1rem 1rem;
-            font-size: 2rem;
-            text-shadow: 0 0 10px rgba(0,255,212,0.5);
+            padding: 4rem 1rem 2rem;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
             position: relative;
+            word-wrap: break-word;
         }
 
         .page-title::after {
@@ -127,14 +132,14 @@ require_once 'celestial_template.php';
             position: absolute;
             top: 50%;
             margin-left: 0.5rem;
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 3vw, 1.2rem);
             animation: twinkle 1.5s infinite alternate;
         }
 
         .celestial-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 1rem;
+            padding: 0 1rem 2rem;
         }
 
         .celestial-block {
@@ -143,17 +148,19 @@ require_once 'celestial_template.php';
             margin: 1rem auto;
             padding: 1rem;
             display: flex;
+            flex-direction: row;
             gap: 1rem;
             backdrop-filter: blur(10px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            border-radius: 8px;
+            border-radius: 0px;
             transition: transform 0.3s ease;
-            height: 220px;
+            min-height: 200px;
+            width: 100%;
         }
 
         .celestial-image {
             flex: 0 0 200px;
-            height: 200x;
+            height: 200px;
             position: relative;
             overflow: hidden;
             border-radius: 8px;
@@ -164,58 +171,62 @@ require_once 'celestial_template.php';
             height: 100%;
             object-fit: cover;
             border-radius: 6px;
-            border: 2px solid var(--star-gold);
         }
 
         .celestial-info {
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
             min-width: 0;
         }
 
         .info-header h2 {
             color: var(--star-gold);
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
             margin-bottom: 0.5rem;
-            text-shadow: 0 0 5px rgba(0,255,212,0.3);
+            text-shadow: 0 0 5px rgba(255,215,0,0.3);
+            word-wrap: break-word;
         }
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 0.75rem;
             margin-top: 0.5rem;
         }
 
         .info-item {
-            background: rgba(0,255,212,0.1);
+            background: rgba(255,215,0,0.1);
             padding: 0.5rem;
             border-radius: 4px;
-            border: 1px solid rgba(0,255,212,0.2);
+            border: 1px solid rgba(255,215,0,0.2);
+            min-width: 0;
         }
 
         .info-label {
             display: block;
-            font-size: 0.8rem;
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
             color: var(--star-gold);
             margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .info-value {
             display: block;
-            font-size: 0.9rem;
+            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
-
-
 
         .celestial-block:hover {
             transform: translateY(-3px);
             box-shadow: 
                 0 8px 20px rgba(0,0,0,0.3),
-                0 0 20px rgba(0,255,212,0.2);
+                0 0 20px rgba(255,215,0,0.2);
         }
 
         @keyframes twinkle {
@@ -223,56 +234,128 @@ require_once 'celestial_template.php';
             to { opacity: 1; }
         }
 
-
-
+        /* Tablet styles */
         @media screen and (max-width: 992px) {
             .celestial-container {
-                padding: 0 0.75rem;
+                padding: 0 0.75rem 2rem;
             }
 
             .celestial-block {
-                height: auto;
-                min-height: 200px;
+                margin: 1rem 0;
+                padding: 1rem;
             }
-        }
 
-        @media screen and (max-width: 768px) {
             .celestial-image {
-                flex: 0 0 160px;
-                height: 160px;
+                flex: 0 0 180px;
+                height: 180px;
             }
 
             .info-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
             }
         }
 
-        @media screen and (max-width: 480px) {
+        /* Mobile landscape and small tablets */
+        @media screen and (max-width: 768px) {
+            .nav-container {
+                padding: 0.5rem;
+            }
+
             .page-title {
-                font-size: 1.5rem;
-                padding: 3.5rem 0.5rem 1rem;
+                padding: 3.5rem 1rem 1.5rem;
             }
 
             .celestial-block {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                min-height: auto;
+                padding: 1rem;
+            }
+
+            .celestial-image {
+                flex: none;
+                width: 200px;
+                height: 200px;
+                margin-bottom: 1rem;
+            }
+
+            .celestial-info {
+                width: 100%;
+            }
+
+            .info-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                justify-items: center;
+            }
+
+            .info-item {
+                text-align: center;
+                width: 100%;
+            }
+        }
+
+        /* Mobile portrait */
+        @media screen and (max-width: 480px) {
+            .nav-container {
+                padding: 0.5rem;
+            }
+
+            .nav-back {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .page-title {
+                padding: 3.5rem 0.5rem 1rem;
+            }
+
+            .celestial-container {
+                padding: 0 0.5rem 1rem;
+            }
+
+            .celestial-block {
+                margin: 0.75rem 0;
                 padding: 0.75rem;
                 gap: 0.75rem;
             }
 
             .celestial-image {
-                flex: 0 0 140px;
-                height: 140px;
+                width: 160px;
+                height: 160px;
             }
 
             .info-grid {
-                grid-template-columns: repeat(1, 1fr);
+                grid-template-columns: 1fr;
                 gap: 0.5rem;
+                margin-top: 0.75rem;
             }
 
-            .info-header h2 {
-                font-size: 1.2rem;
+            .info-item {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+
+        /* Extra small screens */
+        @media screen and (max-width: 360px) {
+            .celestial-block {
+                margin: 0.5rem 0;
+                padding: 0.5rem;
             }
 
+            .celestial-image {
+                width: 140px;
+                height: 140px;
+            }
 
+            .page-title {
+                padding: 3rem 0.25rem 0.75rem;
+            }
+
+            .celestial-container {
+                padding: 0 0.25rem 1rem;
+            }
         }
     </style>
 </head>
@@ -281,14 +364,15 @@ require_once 'celestial_template.php';
     <div class="cosmic-background"></div>
     <nav class="nav-container">
         <div class="nav-content">
-            <a href="#" onclick="history.back(); return false;" class="nav-back">← Back to Categories</a>
+            <button onclick="history.back()" class="nav-back">← Back to Categories</button>
         </div>
     </nav>
 
-    <h1 class="page-title">Explore Planets</h1>
+    <h1 class="page-title">Explore Stars</h1>
+    
     <div class="celestial-container">
         <?php
-        $bodies = getCelestialBodies('planet', $conn);
+        $bodies = getCelestialBodies('star', $conn);
         
         if ($bodies->num_rows > 0) {
             while($row = $bodies->fetch_assoc()) {
@@ -298,11 +382,11 @@ require_once 'celestial_template.php';
                 
                 echo '<div class="celestial-block">
                         <div class="celestial-image">
-                            <img src="'.$row['image_path'].'" alt="'.$row['name'].'" loading="lazy">
+                            <img src="../../'.$row['image_path'].'" alt="'.$row['name'].'" loading="lazy">
                         </div>
                         <div class="celestial-info">
                             <div class="info-header">
-                                <h2><a href="'.$page_filename.'" style="color: var(--star-gold); text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.textShadow=\'0 0 10px rgba(0,229,255,0.8)\'" onmouseout="this.style.textShadow=\'0 0 5px rgba(0,229,255,0.3)\'">'.$row['name'].'</a></h2>
+                                <h2><a href="'.$page_filename.'" style="color: var(--star-gold); text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.textShadow=\'0 0 10px rgba(255,215,0,0.8)\'" onmouseout="this.style.textShadow=\'0 0 5px rgba(255,215,0,0.3)\'">'.$row['name'].'</a></h2>
                                 <div class="info-grid">
                                     <div class="info-item">
                                         <span class="info-label">Temperature</span>

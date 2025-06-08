@@ -38,19 +38,23 @@ if (isset($_POST['delete']) && isset($_POST['body_id']) && isset($_POST['categor
         $stmt->bind_param("i", $body_id);
         
         if ($stmt->execute()) {
-            // Delete image file
-            if (file_exists($image_path)) {
-                unlink($image_path);
+            // Delete image file (adjust path relative to admin-dashboard location)
+            $full_image_path = "../../" . $image_path;
+            if (file_exists($full_image_path)) {
+                unlink($full_image_path);
             }
             
-            // Delete individual page file
+            // Delete individual page file from correct category directory
             $safe_name = preg_replace('/[^a-zA-Z0-9\-_]/', '', str_replace(' ', '-', $body_name));
             $page_filename = $safe_name . "-" . $body_id . ".php";
-            if (file_exists($page_filename)) {
-                unlink($page_filename);
+            $category_dir = "../../categories/" . $category . "s/";
+            $full_page_path = $category_dir . $page_filename;
+            
+            if (file_exists($full_page_path)) {
+                unlink($full_page_path);
             }
             
-            $success_message = "Celestial body and its individual page deleted successfully!";
+            $success_message = "Celestial body deleted successfully! Files cleaned up: image and page file removed.";
         } else {
             $error_message = "Error deleting celestial body: " . $conn->error;
         }
@@ -837,7 +841,7 @@ $result = $conn->query($sql);
             </div>
 
             <div class="button-group">
-                <button onclick="history.back()" class="control-btn">Back</button>
+                <button class="control-btn" onclick="history.back()">Back</button>
             </div>
         </div>
     </div>

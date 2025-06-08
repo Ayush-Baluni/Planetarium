@@ -22,16 +22,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $category = $conn->real_escape_string($_POST['category']);
 
     // Handle file upload
-    $target_dir = "uploads/";
+    $target_dir = "../../uploads/";
     $file_extension = strtolower(pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION));
     $new_filename = $name . "_" . time() . "." . $file_extension;
     $target_file = $target_dir . $new_filename;
+    
+    // Store the relative path for the database (from root)
+    $db_image_path = "uploads/" . $new_filename;
 
     if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
         // Insert into appropriate table based on category
         $table = $category . "s"; // planets, moons, or stars
         $sql = "INSERT INTO $table (name, image_path, temperature, age, description, distance) 
-                VALUES ('$name', '$target_file', '$temperature', '$age', '$description', '$distance')";
+                VALUES ('$name', '$db_image_path', '$temperature', '$age', '$description', '$distance')";
 
         if ($conn->query($sql) === TRUE) {
             // Get the ID of the newly inserted body
@@ -40,6 +43,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Create individual page file for this body
             $safe_name = preg_replace('/[^a-zA-Z0-9\-_]/', '', str_replace(' ', '-', $name));
             $page_filename = $safe_name . "-" . $body_id . ".php";
+            
+            // Determine the correct directory for the body type
+            $category_dir = "../../categories/" . $category . "s/";
+            $full_page_path = $category_dir . $page_filename;
             
             // Create the individual page content
             $page_content = "<?php
@@ -51,12 +58,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 \$_GET['category'] = '$category';
 
 // Include the template
-include 'body_page_template.php';
+include '../../body_page_template.php';
 ?>";
 
-            // Write the individual page file
-            if (file_put_contents($page_filename, $page_content)) {
-                $success = "New celestial body added successfully! Individual page created: $page_filename";
+            // Ensure the category directory exists
+            if (!is_dir($category_dir)) {
+                mkdir($category_dir, 0755, true);
+            }
+
+            // Write the individual page file to the correct category directory
+            if (file_put_contents($full_page_path, $page_content)) {
+                $success = "New celestial body added successfully! Individual page created: " . $category . "s/" . $page_filename;
             } else {
                 $success = "New celestial body added successfully! (Warning: Could not create individual page file)";
             }

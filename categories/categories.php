@@ -1,5 +1,5 @@
 <?php
-require_once 'counter.php';
+require_once '../counter.php';
 $counter = new VisitorCounter('category');
 $counter->trackVisitor();
 ?>
@@ -341,17 +341,17 @@ $counter->trackVisitor();
             <div class="category-box">
                 <h2 class="category-title">Planets</h2>
                 <p class="category-description">Discover the vast worlds orbiting stars, each with its unique characteristics and secrets waiting to be explored. Traverse through diverse planetary landscapes and unravel the mysteries of celestial formations.</p>
-                <a href = "planets.php"><button class="category-button">Explore Planets</button></a>
+                <a href = "planets/planets.php"><button class="category-button">Explore Planets</button></a>
             </div>
             <div class="category-box">
                 <h2 class="category-title">Moons</h2>
                 <p class="category-description">Delve into the moons of the solar system, their enigmatic surfaces, and hidden mysteries. Explore the unique environments that orbit planets, each with its own geological and astronomical significance.</p>
-                <a href = "moons.php"><button class="category-button">Explore Moons</button></a>
+                <a href = "moons/moons.php"><button class="category-button">Explore Moons</button></a>
             </div>
             <div class="category-box">
                 <h2 class="category-title">Stars</h2>
                 <p class="category-description">Journey through the cosmos to uncover the stories of the stars, the light of distant galaxies. Witness the birth, life, and spectacular deaths of stellar bodies that illuminate the vast cosmic canvas.</p>
-                <a href = "stars.php"><button class="category-button">Explore Stars</button></a>
+                <a href = "stars/stars.php"><button class="category-button">Explore Stars</button></a>
             </div>
         </div>
     </div>

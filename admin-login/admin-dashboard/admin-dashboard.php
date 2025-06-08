@@ -1,17 +1,15 @@
 <?php
 session_start();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    
-    if ($email === 'scbaluni63094@gmail.com' && $password === '1234gold@8') {
-        $_SESSION['admin_logged_in'] = true;
-        header("Location: admin-dashboard.php");
-        exit();
-    } else {
-        $error = "Access Denied: Invalid Credentials";
-    }
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    header("Location: admin-login.php");
+    exit();
+}
+
+if (isset($_POST['logout'])) {
+    session_destroy();
+    header("Location: admin-login.php");
+    exit();
 }
 ?>
 
@@ -20,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mission Control Access - Cosmic Horizons</title>
+    <title>Mission Control Dashboard - Cosmic Horizons</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -79,16 +77,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             z-index: -1;
         }
 
-        .login-container {
+        .dashboard-container {
+            background: rgba(11, 23, 70, 0.6);
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(11, 23, 70, 0.6);
-            padding: 3rem;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
             backdrop-filter: blur(10px);
             border: 1px solid var(--hologram-cyan);
             box-shadow: 0 0 20px rgba(0, 255, 212, 0.2);
@@ -106,49 +104,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             text-shadow: 0 0 10px rgba(0, 255, 212, 0.5);
         }
 
-        .form-group {
-            margin-bottom: 1.5rem;
+        .dashboard-option {
+            background: rgba(0, 255, 212, 0.05);
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--hologram-cyan);
         }
 
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
+        .dashboard-option:hover {
+            background: rgba(0, 255, 212, 0.1);
+            transform: translateX(10px);
+            box-shadow: 0 0 15px rgba(0, 255, 212, 0.3);
+        }
+
+        .dashboard-option h3 {
             color: var(--hologram-cyan);
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
             letter-spacing: 1px;
-            text-transform: uppercase;
         }
 
-        input {
-            width: 100%;
-            padding: 0.8rem;
-            background: rgba(0, 255, 212, 0.05);
-            border: 1px solid var(--hologram-cyan);
-            border-radius: 4px;
-            color: var(--hologram-cyan);
-            font-family: 'Share Tech Mono', monospace;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(0, 255, 212, 0.1);
-        }
-
-        input:focus {
-            outline: none;
-            box-shadow: 0 0 15px rgba(0, 255, 212, 0.3);
-            background: rgba(0, 255, 212, 0.1);
-            border-color: var(--hologram-cyan);
-        }
-
-        .button-group {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
+        .dashboard-option p {
+            color: var(--starlight-white);
+            font-size: 0.9em;
         }
 
         button {
-            flex: 1;
+            width: 100%;
             padding: 0.8rem;
+            margin-top: 1rem;
             font-family: 'Orbitron', sans-serif;
             font-size: 1rem;
             cursor: pointer;
@@ -156,15 +143,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             text-transform: uppercase;
             letter-spacing: 1px;
             border-radius: 4px;
-        }
-
-        button[type="button"] {
-            background: transparent;
-            border: 1px solid var(--hologram-cyan);
-            color: var(--hologram-cyan);
-        }
-
-        button[type="submit"] {
             background: var(--hologram-cyan);
             border: 1px solid var(--hologram-cyan);
             color: var(--deep-space-blue);
@@ -175,23 +153,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             box-shadow: 0 0 15px rgba(0, 255, 212, 0.3);
         }
 
-        .error {
-            background: rgba(255, 0, 0, 0.1);
-            border-left: 3px solid #ff0000;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            animation: errorShake 0.5s ease-in-out;
-        }
-
-        @keyframes errorShake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
         @media screen and (max-width: 768px) {
-            .login-container {
+            .dashboard-container {
                 width: 85%;
                 padding: 2rem;
             }
@@ -200,32 +163,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 font-size: 1.5em;
             }
 
-            .button-group {
-                flex-direction: column;
+            .dashboard-option {
+                margin: 0.8rem 0;
+                padding: 0.8rem;
             }
 
             button {
-                width: 100%;
-                margin-bottom: 0.5rem;
+                padding: 0.7rem;
             }
         }
 
         @media screen and (max-width: 480px) {
-            .login-container {
+            .dashboard-container {
                 width: 80%;
                 padding: 1.5rem;
             }
 
             h2 {
                 font-size: 1.2em;
+                margin-bottom: 1.5rem;
             }
 
-            input {
-                padding: 0.6rem;
+            .dashboard-option h3 {
+                font-size: 1em;
             }
 
-            .form-group {
-                margin-bottom: 1rem;
+            .dashboard-option p {
+                font-size: 0.8em;
             }
         }
     </style>
@@ -233,28 +197,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="overlay"></div>
     <div class="cosmic-background"></div>
-    <div class="login-container">
-        <h2>Mission Control Access</h2>
+    <div class="dashboard-container">
+        <h2>Mission Control Dashboard</h2>
         
-        <?php if (isset($error)): ?>
-            <div class="error"><?php echo $error; ?></div>
-        <?php endif; ?>
-
-        <form method="POST" action="">
-            <div class="form-group">
-                <label for="email">Administrator ID</label>
-                <input type="email" id="email" name="email" required autocomplete="off">
+        <a href="add-body.php" style="text-decoration: none; color: inherit;">
+            <div class="dashboard-option">
+                <h3>Add Body</h3>
+                <p>Add new celestial bodies to the database</p>
             </div>
+        </a>
 
-            <div class="form-group">
-                <label for="password">Access Code</label>
-                <input type="password" id="password" name="password" required>
+        <a href="delete-body.php" style="text-decoration: none; color: inherit;">
+            <div class="dashboard-option">
+                <h3>Delete Body</h3>
+                <p>Remove existing celestial bodies</p>
             </div>
+        </a>
 
-            <div class="button-group">
-                <button type="button" onclick="history.back()">Abort</button>
-                <button type="submit">Authenticate</button>
-            </div>
+        <form method="POST" class="logout-form">
+                            <button type="button" onclick="history.back()">Terminate Session</button>
         </form>
     </div>
 </body>

@@ -1,3 +1,12 @@
+<?php
+require_once '../../counter.php';
+// 30-minute session timeout (standard web practice)
+$counter = new VisitorCounter('about', 30);
+$counter->trackVisitor();
+$total_visits = $counter->getTotalVisits();
+$today_visits = $counter->getTodayVisits();
+$session_info = $counter->getSessionInfo();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -255,8 +264,8 @@
     <div class="cosmic-container">
         <div class="visitor-data">
             <h3 class="terminal-text">COSMIC CONNECTION METRICS</h3>
-            <p>TOTAL CELESTIAL VIEWS: 100</p>
-            <p>CELESTIAL VIEWS TODAY: 11</p>
+            <p>TOTAL CELESTIAL VIEWS: <?php echo $total_visits; ?></p>
+            <p>CELESTIAL VIEWS TODAY: <?php echo $today_visits; ?></p>
         </div>
 
         <h1 class="holographic-header">COSMIC HORIZONS PLANETARIUM</h1>

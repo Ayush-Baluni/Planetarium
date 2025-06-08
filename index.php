@@ -18,13 +18,13 @@ $today_visits = $counter->getTodayVisits();
   <header>
     <nav>
       <ul>
-        <li><a href="events.php">Events</a></li>
-        <li><a href="categories.php">Categories</a></li>
+        <li><a href="pages/APOD/APOD.php">APOD</a></li>
+        <li><a href="categories/categories.php">Categories</a></li>
         <li class="title-container">
             <span class="title">Planetarium</span>
         </li>
-        <li><a href="about.php">About</a></li>
-        <li><a href="admin-login.php">Admin Login</a></li>
+        <li><a href="pages/about/about.php">About</a></li>
+        <li><a href="admin-login/admin-login.php">Admin Login</a></li>
       </ul>
     </nav>
   </header>

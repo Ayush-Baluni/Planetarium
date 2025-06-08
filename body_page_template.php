@@ -5,6 +5,33 @@ require_once 'counter.php';
 $body_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $category = isset($_GET['category']) ? $_GET['category'] : 'planet';
 
+// Set color scheme based on category
+$theme_colors = [
+    'planet' => [
+        'primary' => '#00FF7F',
+        'rgba_strong' => 'rgba(0,255,127,0.7)',
+        'rgba_medium' => 'rgba(0,255,127,0.5)',
+        'rgba_light' => 'rgba(0,255,127,0.2)',
+        'rgba_faint' => 'rgba(0,255,127,0.1)'
+    ],
+    'star' => [
+        'primary' => '#FFD700',
+        'rgba_strong' => 'rgba(255,215,0,0.7)',
+        'rgba_medium' => 'rgba(255,215,0,0.5)',
+        'rgba_light' => 'rgba(255,215,0,0.2)',
+        'rgba_faint' => 'rgba(255,215,0,0.1)'
+    ],
+    'moon' => [
+        'primary' => '#C0C0C0',
+        'rgba_strong' => 'rgba(192,192,192,0.7)',
+        'rgba_medium' => 'rgba(192,192,192,0.5)',
+        'rgba_light' => 'rgba(192,192,192,0.2)',
+        'rgba_faint' => 'rgba(192,192,192,0.1)'
+    ]
+];
+
+$current_theme = $theme_colors[$category] ?? $theme_colors['planet'];
+
 // Database connection
 $conn = new mysqli("localhost", "root", "", "planetarium_db");
 
@@ -100,7 +127,7 @@ $counter->trackVisitor();
             top: 0;
             background: rgba(11, 23, 70, 0.9);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--hologram-cyan);
+            border-bottom: 1px solid <?php echo $current_theme['primary']; ?>;
             z-index: 100;
             padding: 1rem 0;
         }
@@ -115,17 +142,19 @@ $counter->trackVisitor();
         }
 
         .nav-back {
-            color: var(--hologram-cyan);
+            color: <?php echo $current_theme['primary']; ?>;
+            background: transparent;
             text-decoration: none;
             font-family: 'Orbitron', sans-serif;
             padding: 0.5rem 1rem;
-            border: 1px solid var(--hologram-cyan);
+            border: 1px solid <?php echo $current_theme['primary']; ?>;
             border-radius: 4px;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .nav-back:hover {
-            background: var(--hologram-cyan);
+            background: <?php echo $current_theme['primary']; ?>;
             color: var(--deep-space-blue);
         }
 
@@ -143,10 +172,10 @@ $counter->trackVisitor();
         .body-title {
             font-family: 'Orbitron', sans-serif;
             font-size: clamp(2.5rem, 5vw, 4rem);
-            color: var(--hologram-cyan);
+            color: <?php echo $current_theme['primary']; ?>;
             text-shadow: 
-                0 0 20px rgba(0,255,212,0.7),
-                0 0 40px rgba(0,255,212,0.5);
+                0 0 20px <?php echo $current_theme['rgba_strong']; ?>,
+                0 0 40px <?php echo $current_theme['rgba_medium']; ?>;
             margin-bottom: 1rem;
             animation: pulse 4s infinite alternate;
         }
@@ -187,9 +216,9 @@ $counter->trackVisitor();
             background: rgba(11, 23, 70, 0.6);
             padding: 1.2rem;
             border-radius: 15px;
-            border: 1px solid var(--hologram-cyan);
+            border: 1px solid <?php echo $current_theme['primary']; ?>;
             backdrop-filter: blur(10px);
-            box-shadow: 0 0 30px rgba(0,255,212,0.1);
+            box-shadow: 0 0 30px <?php echo $current_theme['rgba_faint']; ?>;
             aspect-ratio: 1;
             display: flex;
             flex-direction: column;
@@ -206,7 +235,7 @@ $counter->trackVisitor();
 
         .info-title {
             font-family: 'Orbitron', sans-serif;
-            color: var(--hologram-cyan);
+            color: <?php echo $current_theme['primary']; ?>;
             font-size: 1.1rem;
             margin-bottom: 0.5rem;
             text-transform: uppercase;
@@ -226,10 +255,10 @@ $counter->trackVisitor();
         }
 
         .info-item {
-            background: rgba(0,255,212,0.1);
+            background: <?php echo $current_theme['rgba_faint']; ?>;
             padding: 0.5rem;
             border-radius: 6px;
-            border: 1px solid rgba(0,255,212,0.2);
+            border: 1px solid <?php echo $current_theme['rgba_light']; ?>;
             transition: transform 0.3s ease;
             display: flex;
             flex-direction: column;
@@ -241,12 +270,12 @@ $counter->trackVisitor();
 
         .info-item:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,255,212,0.2);
+            box-shadow: 0 5px 15px <?php echo $current_theme['rgba_light']; ?>;
         }
 
         .info-label {
             display: block;
-            color: var(--hologram-cyan);
+            color: <?php echo $current_theme['primary']; ?>;
             font-size: 0.75rem;
             margin-bottom: 0.3rem;
             text-transform: uppercase;
@@ -262,15 +291,15 @@ $counter->trackVisitor();
         .description-section {
             grid-column: 1 / -1;
             background: rgba(0,0,0,0.3);
-            padding: 2rem;
+            padding: clamp(1rem, 4vw, 2rem);
             border-radius: 15px;
-            border: 1px solid rgba(0,255,212,0.2);
+            border: 1px solid <?php echo $current_theme['rgba_light']; ?>;
             margin-top: 2rem;
         }
 
         .description-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            line-height: clamp(1.5, 2vw, 1.8);
             text-align: justify;
             word-wrap: break-word;
             word-break: break-word;
@@ -280,8 +309,8 @@ $counter->trackVisitor();
         }
 
         @keyframes pulse {
-            from { text-shadow: 0 0 20px rgba(0,255,212,0.7), 0 0 40px rgba(0,255,212,0.5); }
-            to { text-shadow: 0 0 30px rgba(0,255,212,0.9), 0 0 60px rgba(0,255,212,0.7); }
+            from { text-shadow: 0 0 20px <?php echo $current_theme['rgba_strong']; ?>, 0 0 40px <?php echo $current_theme['rgba_medium']; ?>; }
+            to { text-shadow: 0 0 30px <?php echo str_replace('0.7', '0.9', $current_theme['rgba_strong']); ?>, 0 0 60px <?php echo $current_theme['rgba_strong']; ?>; }
         }
 
         /* Responsive Font Sizing */
@@ -364,6 +393,17 @@ $counter->trackVisitor();
                 display: block;
                 margin: auto;
             }
+
+            .description-text {
+                font-size: 0.9rem;
+                line-height: 1.6;
+                text-align: left;
+            }
+
+            .description-section {
+                padding: 1rem;
+                margin-top: 1.5rem;
+            }
         }
 
         @media screen and (max-width: 480px) {
@@ -373,6 +413,16 @@ $counter->trackVisitor();
 
             .body-info {
                 padding: 1.5rem;
+            }
+
+            .description-text {
+                font-size: 0.85rem;
+                line-height: 1.5;
+            }
+
+            .description-section {
+                padding: 0.75rem;
+                margin-top: 1rem;
             }
         }
 
@@ -436,7 +486,7 @@ $counter->trackVisitor();
     
     <nav class="nav-container">
         <div class="nav-content">
-            <a href="#" onclick="history.back(); return false;" class="nav-back">← Back to <?php echo ucfirst($category); ?>s</a>
+            <button onclick="history.back()" class="nav-back">← Back to <?php echo ucfirst($category); ?>s</button>
         </div>
     </nav>
 
@@ -448,7 +498,7 @@ $counter->trackVisitor();
 
         <div class="body-content">
             <div class="body-image-container">
-                <img src="<?php echo htmlspecialchars($body['image_path']); ?>" 
+                <img src="../../<?php echo htmlspecialchars($body['image_path']); ?>" 
                      alt="<?php echo htmlspecialchars($body['name']); ?>" 
                      class="body-image">
             </div>
