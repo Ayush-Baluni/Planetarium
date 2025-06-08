@@ -364,7 +364,58 @@ require_once '../../celestial_template.php';
     <div class="cosmic-background"></div>
     <nav class="nav-container">
         <div class="nav-content">
-            <button onclick="history.back()" class="nav-back">← Back to Categories</button>
+            <button onclick="history.back()" class="nav-back">← Back</button>
+            <!-- Search Container -->
+            <div style="position: relative; width: min(300px, 40vw);">
+                <div style="position: relative; 
+                           border-left: 4px solid var(--star-gold);
+                           background: rgba(20, 30, 80, 0.6);
+                           backdrop-filter: blur(10px);
+                           box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                    <input type="text" id="searchInput" placeholder="Search stars..." 
+                           style="width: 100%; 
+                                  padding: 0.5rem 3.5rem 0.5rem 1rem; 
+                                  background: transparent;
+                                  border: none;
+                                  color: var(--starlight-white); 
+                                  font-family: 'Roboto Mono', monospace; 
+                                  font-size: clamp(0.8rem, 2vw, 0.9rem);">
+                    <style>
+                        @media screen and (max-width: 768px) {
+                            #searchInput::placeholder {
+                                font-size: 0.8rem;
+                            }
+                        }
+                        @media screen and (max-width: 480px) {
+                            #searchInput {
+                                padding-right: 3rem;
+                            }
+                            #searchInput::placeholder {
+                                content: "Search...";
+                            }
+                        }
+                    </style>
+                    <button id="clearSearch" 
+                            style="position: absolute; 
+                                   right: 2rem; 
+                                   top: 50%; 
+                                   transform: translateY(-50%);
+                                   background: none;
+                                   border: none;
+                                   color: var(--star-gold);
+                                   cursor: pointer;
+                                   display: none;
+                                   padding: 0.25rem;
+                                   font-size: 1.2rem;
+                                   line-height: 1;">×</button>
+                    <span style="position: absolute; 
+                                right: 0.75rem; 
+                                top: 50%; 
+                                transform: translateY(-50%); 
+                                color: var(--star-gold);
+                                font-size: 0.9rem;">⌕</span>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -430,6 +481,54 @@ require_once '../../celestial_template.php';
 
         document.querySelectorAll('.celestial-block').forEach(block => {
             observer.observe(block);
+        });
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const clearButton = document.getElementById('clearSearch');
+        const celestialBlocks = document.querySelectorAll('.celestial-block');
+
+        // Show/hide clear button based on input
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            clearButton.style.display = searchTerm.length > 0 ? 'block' : 'none';
+            
+            celestialBlocks.forEach(block => {
+                const starName = block.querySelector('h2 a').textContent.toLowerCase();
+                
+                if (starName.includes(searchTerm)) {
+                    block.style.display = 'flex';
+                    block.style.animation = 'fadeIn 0.3s ease';
+                } else {
+                    block.style.display = 'none';
+                }
+            });
+
+            // Show "no results" message if no blocks are visible
+            const visibleBlocks = Array.from(celestialBlocks).filter(block => block.style.display !== 'none');
+            let noResultsMsg = document.getElementById('noResultsMsg');
+            
+            if (visibleBlocks.length === 0 && searchTerm !== '') {
+                if (!noResultsMsg) {
+                    noResultsMsg = document.createElement('div');
+                    noResultsMsg.id = 'noResultsMsg';
+                    noResultsMsg.style.cssText = 'text-align: center; padding: 2rem; color: var(--star-gold); font-family: "Orbitron", sans-serif;';
+                    noResultsMsg.innerHTML = '<p>No stars found matching "' + searchTerm + '"</p>';
+                    document.querySelector('.celestial-container').appendChild(noResultsMsg);
+                } else {
+                    noResultsMsg.innerHTML = '<p>No stars found matching "' + searchTerm + '"</p>';
+                    noResultsMsg.style.display = 'block';
+                }
+            } else if (noResultsMsg) {
+                noResultsMsg.style.display = 'none';
+            }
+        });
+
+        // Clear search functionality
+        clearButton.addEventListener('click', function() {
+            searchInput.value = '';
+            searchInput.dispatchEvent(new Event('input'));
+            searchInput.focus();
         });
     });
     </script>
