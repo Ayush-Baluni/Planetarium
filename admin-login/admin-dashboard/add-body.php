@@ -470,7 +470,7 @@ include '../../body_page_template.php';
             </div>
 
             <div class="form-group">
-                <label for="image">Image (PNG only)</label>
+                <label for="image">Image</label>
                 <input type="file" id="image" name="image" accept=".png" required>
             </div>
 

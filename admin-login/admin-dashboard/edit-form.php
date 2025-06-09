@@ -236,6 +236,30 @@ if (isset($_GET['id']) && isset($_GET['category'])) {
             color: rgba(0, 255, 212, 0.5);
         }
 
+        input[type="file"] {
+            padding: 0.5rem;
+            background: transparent;
+            border: none;
+            color: var(--hologram-cyan);
+        }
+
+        input[type="file"]::-webkit-file-upload-button {
+            background: transparent;
+            border: 1px solid var(--hologram-cyan);
+            color: var(--hologram-cyan);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-family: 'Share Tech Mono', monospace;
+            cursor: pointer;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="file"]::-webkit-file-upload-button:hover {
+            background: var(--hologram-cyan);
+            color: var(--deep-space-blue);
+        }
+
         .button-group {
             display: flex;
             gap: 1rem;
