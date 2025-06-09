@@ -207,6 +207,13 @@ if (isset($_POST['logout'])) {
             </div>
         </a>
 
+        <a href="edit-body.php" style="text-decoration: none; color: inherit;">
+            <div class="dashboard-option">
+                <h3>Edit Body</h3>
+                <p>Modify existing celestial bodies</p>
+            </div>
+        </a>
+
         <a href="delete-body.php" style="text-decoration: none; color: inherit;">
             <div class="dashboard-option">
                 <h3>Delete Body</h3>
